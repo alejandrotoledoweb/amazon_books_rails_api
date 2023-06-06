@@ -3,15 +3,16 @@ require 'rails_helper'
 describe 'Book API', type: :request do
 
   describe 'GET /books' do
+    let(:author) {  FactoryBot.create(:author, first_name: 'Andy', last_name: 'Weir')}
+    let(:author2) {  FactoryBot.create(:author, first_name: 'Andres', last_name: 'Paredes')}
 
     it 'gets a list of all Books' do
-      author = FactoryBot.create(:author, first_name: 'Andy', last_name: 'Weir')
       FactoryBot.create(:book, title: 'The Martian', author: author)
-      FactoryBot.create(:book, title: 'Programming Ruby 1.9 & 2.0', author: author)
+      FactoryBot.create(:book, title: 'Programming Ruby 1.9 & 2.0', author: author2)
       get '/api/v1/books'
 
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body).size).to eq(2)
+      expect(response_body.size).to eq(2)
     end
   end
 
