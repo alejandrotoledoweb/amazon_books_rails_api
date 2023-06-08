@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class AuthenticationTokenService
-  def self.call
-    hmac_secret = 'my$ecretK3y'
-    payload = { user_id: 'User1' }
-    JWT.encode payload, hmac_secret, 'HS256'
+  HMAC_SECRET = 'my$ecretK3y'
+  ALGORITHM_TYPE = 'HS256'
+
+  def self.call(payload)
+    payload = { user_id: payload }
+    JWT.encode(payload,
+               HMAC_SECRET,
+               ALGORITHM_TYPE)
   end
 end
