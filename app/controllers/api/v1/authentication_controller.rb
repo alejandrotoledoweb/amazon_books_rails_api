@@ -6,13 +6,13 @@ module Api
         p params.require(:username).inspect
         p params.require(:password).inspect
 
-        render json: { "token" => "123" }, status: :created
+        render json: { 'token' => '123' }, status: :created
       end
 
       private
 
-      def parameter_missing(e)
-        render json: { error: e.message }, status: :unprocessable_entity
+      def parameter_missing(err)
+        render json: { error: err.message }, status: :unprocessable_entity
       end
     end
   end
