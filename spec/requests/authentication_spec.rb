@@ -1,9 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Authentications', type: :request do
   describe 'POST /authenticate' do
-    # let(:user) { FactoryBot.create(:user, username: 'user1') }
-
     it 'should authenticate the user' do
       user = User.create(username: 'user1')
       token = AuthenticationTokenService.call(user.id)
