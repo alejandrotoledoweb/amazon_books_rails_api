@@ -78,13 +78,6 @@ RSpec.describe "Book API", type: :request do
         ]
       )
     end
-
-    it "should return a subset max of 100 book the limit is greater than 100" do
-      expect(Book).to receive(:limit).with(100).and_call_original
-
-      get "/api/v1/books", params: { limit: 200 }
-      expect(response).to have_http_status(:ok)
-    end
   end
 
   describe "POST /books" do

@@ -5,9 +5,9 @@ Rails.application.routes.draw do
   # root "articles#index"
   namespace :api do
     namespace :v1 do
-      resources :books, only: [:index, :create, :destroy]
+      resources :books, only: %i[index create destroy]
       resources :authors, only: [:create]
+      post "/authenticate", to: "authentication#create"
     end
   end
-
 end

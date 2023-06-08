@@ -16,6 +16,8 @@ module Api
         else
           render json: book.errors, status: :unprocessable_entity
         end
+        # Example of creation of a Job
+        # CreateBookJob.perform_later(book_params)
       end
 
       def destroy
