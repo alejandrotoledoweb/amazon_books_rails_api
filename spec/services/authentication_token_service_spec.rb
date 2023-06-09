@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe AuthenticationTokenService do
   let(:user) { FactoryBot.create(:user, username: 'BookSeller99') }
   describe '.call' do
-    let(:token) { described_class.call(1) }
+    let(:token) { described_class.encode(1) }
     it 'should return an authentication token' do
       decoded_token = JWT.decode(token,
                                  described_class::HMAC_SECRET,

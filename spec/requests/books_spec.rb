@@ -84,6 +84,12 @@ RSpec.describe 'Book API', type: :request do
     let!(:author) do
       FactoryBot.create(:author, first_name: 'Andy', last_name: 'Weir', age: 55)
     end
+    let!(:user) do
+      FactoryBot.create(:user, username: 'BookSeller99', password: 'foobar')
+    end
+
+    let(:token) { AuthenticationTokenService.encode(user.id) }
+
     it 'creates a new book' do
       expect do
         post '/api/v1/books',
@@ -92,11 +98,19 @@ RSpec.describe 'Book API', type: :request do
                  title: 'The Pragmatic Programmer',
                  author_id: author.id
                }
-             }
+             }, headers: { 'Authorization' => "Bearer #{token}" }
       end.to change { Book.count }.from(0).to(1)
 
       expect(response).to have_http_status(:created)
       expect(response.body).to include('The Pragmatic Programmer')
+    end
+
+    context 'when token is not present' do
+      it 'should return a 401 error' do
+        post '/api/v1/books', params: {}, headers: {}
+
+        expect(response).to have_http_status(:unauthorized)
+      end
     end
   end
 
@@ -104,6 +118,12 @@ RSpec.describe 'Book API', type: :request do
     let!(:author) do
       FactoryBot.create(:author, first_name: 'Andy', last_name: 'Weir', age: 55)
     end
+    let!(:user) do
+      FactoryBot.create(:user, username: 'BookSeller99', password: 'foobar')
+    end
+
+    let(:token) { AuthenticationTokenService.encode(user.id) }
+
     it 'deletes a book' do
       book =
         FactoryBot.create(
@@ -111,7 +131,7 @@ RSpec.describe 'Book API', type: :request do
           title: 'Programming Ruby 1.9 & 5.0',
           author_id: author.id
         )
-      expect { delete "/api/v1/books/#{book.id}" }.to change {
+      expect { delete "/api/v1/books/#{book.id}", headers: { 'Authorization' => "Bearer #{token}" } }.to change {
         Book.count
       }.from(1).to(0)
       expect(response).to have_http_status(:no_content)

@@ -1,6 +1,5 @@
 class Book < ApplicationRecord
-
-  validates :title, presence: true, uniqueness: true, length: {minimum:3}
+  validates :title, presence: true, uniqueness: true, length: { minimum: 3 }
   belongs_to :author
 
   # has_many :reviews, dependent: :destroy

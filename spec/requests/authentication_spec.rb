@@ -4,9 +4,10 @@ require 'rails_helper'
 
 RSpec.describe 'Authentications', type: :request do
   describe 'POST /authenticate' do
+    let(:user) { FactoryBot.create(:user, username: 'user1', password: 'foobar') }
+
     it 'should authenticate the user' do
-      user = User.create(username: 'user1')
-      token = AuthenticationTokenService.call(user.id)
+      token = AuthenticationTokenService.encode(user.id)
       post '/api/v1/authenticate',
            params: {
              username: user.username,
@@ -32,6 +33,11 @@ RSpec.describe 'Authentications', type: :request do
       expect(response_body).to eq(
         { 'error' => 'param is missing or the value is empty: password' }
       )
+    end
+
+    it 'should return when password is incorrect' do
+      post api_v1_authenticate_path, params: { username: user.username, password: 'wrong' }
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end

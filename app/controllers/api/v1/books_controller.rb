@@ -1,8 +1,11 @@
 module Api
   module V1
     class BooksController < ApplicationController
+      include ActionController::HttpAuthentication::Token
+
       MAX_PAGINATION_LIMIT = 100
 
+      before_action :authenticate_user, only: %i[create destroy]
       def index
         books = Book.limit(max_limit).offset(params[:offset])
         render json: BooksRepresenter.new(books).as_json
@@ -26,6 +29,16 @@ module Api
       end
 
       private
+
+      def authenticate_user
+        # Authorization: 'Bearer <token>'
+        # binding.irb
+        token, _options = token_and_options(request)
+        user_id = AuthenticationTokenService.decode(token)
+        User.find(user_id)
+      rescue ActiveRecord::RecordNotFound, JWT::DecodeError
+        render status: :unauthorized
+      end
 
       def book_params
         params.require(:book).permit(:title, :author_id)

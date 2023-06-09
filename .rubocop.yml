@@ -6,3 +6,5 @@ Style/FrozenStringLiteralComment:
   Enabled: true
   AutoCorrect: true
   EnforcedStyle: always
+Metrics/BlockLength:
+  Max: 120
